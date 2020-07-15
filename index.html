@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>TODO List</title>
+  <style>
+    *{
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    main{
+      display: flex;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    button{
+      margin-top: 20px;
+      padding: 5px;
+      font-size: 15px;
+    }
+    ol{
+      background: #eee;
+      width: 300px;
+      text-align: center;
+      font-size: 25px;
+    }
+    li{
+      padding: 10px;
+    }
+    li button{
+      float: right;
+      margin: 0;
+      background-color: red;
+      color: white;
+      border-radius: 5px;
+    }
+  </style>
+  </head>
+  <body>
+    <main>
+      <h1>TODO List</h1>
+      <input type="text" id="task">
+      <button type="button" onclick="getValueTask()">Add</button>
+      <form>
+        <ol>  
+        </ol>
+      </form>
+    </main>
+    <script>
+      function getValueTask(){
+        let valueTask = document.querySelector("#task").value
+        if (!valueTask) return
+        setLi(valueTask)
+        clearInput()
+      }
+      function setLi(task){
+        let li = document.createElement('li')
+        let button = document.createElement('button')
+        button.innerText = "reset"
+        button.type = "button"
+        button.id = 'clear'
+        button.onclick = function(){clear(this)}
+        li.innerText = task
+        li.appendChild(button)
+        document.querySelector('ol').appendChild(li)
+        saveTasks()
+      }
+      function clear(element){
+        let button = document.querySelector("#clear")
+          if(element.id === "clear")
+            element.parentNode.remove()
+          saveTasks()    
+      } 
+      function clearInput(){
+        document.querySelector('#task').value = ''
+        document.querySelector('#task').focus()
+      }
+
+      function saveTasks(){
+        const liTask = document.querySelectorAll('li')     
+        const toDolist = []
+        liTask.forEach(task =>{    
+          let textTask = task.innerText
+          textTask = textTask.replace("reset",'').trim()      
+          toDolist.push(textTask)
+        })
+        const jsonTask = JSON.stringify(toDolist)
+        localStorage.setItem('tasks', jsonTask)
+      }
+      function addTasksSalveds(){
+        const tasks = localStorage.getItem('tasks')
+        const toDo = JSON.parse(tasks)
+        toDo.forEach(task =>{
+          setLi(task)
+        })
+      }
+      addTasksSalveds()
+
+    </script>
+  </body>
+</html>
